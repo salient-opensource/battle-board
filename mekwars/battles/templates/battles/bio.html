@@ -1,0 +1,120 @@
+{% extends 'battles/base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block mainblock %}
+<hr>
+<div class="container-fluid detailmain">
+<div class="row">
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 padding">
+<h4>Player Info</h4>
+<ul class="list-unstyled list-group">
+{% for key, value in user_info.items %}
+    {% if key == "myLogo" %}
+        <li class="list-group-item bg-dark">
+        <img src="{% static "" %}battles/img/factions/{{ user_info.house }}.png" class="player-imgs" alt="{{ user_info.house }}">
+        <img src="{{ value }}" class="img-thumbnail player-imgs" alt="{{ key }}">
+        </li>
+    {% elif key == "money" or key == "influence" or key == "rewardPoints" %}
+    {% else %}
+        <li class="list-group-item bg-dark"><b>{{key}} - {{value}}</b></li>
+    {% endif %}
+ {% endfor %}
+</ul>
+<br>
+<h4>Battle Stats</h4>
+    <ul class="list-unstyled list-group">
+        <li class="list-group-item bg-dark">
+            <b>Wins:</b> <b class="text-success">{{ wins }}</b> |
+            <b>Losses:</b> <b class="text-danger">{{ losses }}</b>
+        </li>
+        <li class="list-group-item bg-dark">
+            <b>Battle Ratio:</b>
+            {% if ratio > 50 %}
+                 <b class="text-success">{{ ratio }}%</b>
+            {% else %}
+                 <b class="text-danger">{{ ratio }}%</b>
+            {% endif %}
+        </li>
+        <li class="list-group-item bg-dark">
+            <b>Units Destroyed: </b><b class="text-success">{{ units_destroyed }}</b> |
+            <b>Lost: </b><b class="text-danger">{{ units_lost }}</b>
+        </li>
+        <li class="list-group-item bg-dark">
+            <b>Units Ratio:</b>
+            {% if unit_ratio > 50 %}
+                 <b class="text-success">{{ unit_ratio }}%</b>
+            {% else %}
+                 <b class="text-danger">{{ unit_ratio }}%</b>
+            {% endif %}
+        </li>
+        <li class="list-group-item bg-dark">
+            <b>BV Destroyed: </b><b class="text-success">{{ bv_destroyed|intcomma }}</b> |
+            <b>Lost: </b><b class="text-danger">{{ bv_lost|intcomma }}</b>
+        </li>
+        <li class="list-group-item bg-dark">
+            <b>BV Ratio:</b>
+            {% if unit_ratio > 50 %}
+                 <b class="text-success">{{ bv_ratio }}%</b>
+            {% else %}
+                 <b class="text-danger">{{ bv_ratio }}%</b>
+            {% endif %}
+        </li>
+        <li class="list-group-item bg-dark">
+            <b>CBills Destroyed: </b><b class="text-success">{{ val_destroyed|intword }}</b> |
+            <b>Lost: </b><b class="text-danger">{{ val_lost|intword }}</b>
+        </li>
+        <li class="list-group-item bg-dark">
+            <b>CBill Ratio:</b>
+            {% if unit_ratio > 50 %}
+                 <b class="text-success">{{ val_ratio }}%</b>
+            {% else %}
+                 <b class="text-danger">{{ val_ratio }}%</b>
+            {% endif %}
+        </li>
+    </ul>
+</div>
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 padding">
+<h4>Battles</h4>
+    <ul class="list-unstyled list-group">
+        {% for battle in all_battles %}
+            {% if battle.winner == user_info.name %}
+                <li class="list-group-item bg-success">
+            {% else %}
+                <li class="list-group-item bg-danger">
+            {% endif %}
+                <b><a href="/battles/{{ battle.id }}/">
+                <i class="text-dark">{{ battle.datetime }}</i><br>
+                {{ battle.faction_won }} vs {{ battle.faction_lost }}<br>
+                <i class="text-warning"> {{ battle.winner }} vs {{ battle.loser }}</i><br>
+                @{{ battle.location }}</a></b></li>
+        {% endfor %}
+    </ul>
+<br>
+{#<h4>Battles Won</h4>#}
+{#    <ul class="list-unstyled list-group">#}
+{#        {% for battle in battles_won %}#}
+{#            <li class="list-group-item bg-dark"><b><a href="/battles/{{ battle.id }}/">#}
+{#                <i class="text-primary">{{ battle.datetime }}</i><br>#}
+{#                {{ battle.faction_won }} vs {{ battle.faction_lost }}<br>#}
+{#                <i class="text-warning"> {{ battle.winner }} vs {{ battle.loser }}</i><br>#}
+{#                @{{ battle.location }}</a></b></li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#<br>#}
+{#<h4>Battles Lost</h4>#}
+{#    <ul class="list-unstyled list-group">#}
+{#        {% for battle in battles_lost %}#}
+{#            <li class="list-group-item bg-dark"><b><a href="/battles/{{ battle.id }}/">#}
+{#                <i class="text-primary">{{ battle.datetime }}</i><br>#}
+{#                {{ battle.faction_won }} vs {{ battle.faction_lost }}<br>#}
+{#                <i class="text-warning"> {{ battle.winner }} vs {{ battle.loser }}</i><br>#}
+{#                @{{ battle.location }}</a></b></li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+

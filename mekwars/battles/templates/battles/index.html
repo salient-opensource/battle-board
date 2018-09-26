@@ -1,0 +1,37 @@
+{% extends 'battles/base.html' %}
+{% load staticfiles %}
+{% block mainblock %}
+<div class="container-fluid indexmain">
+    <form class="card card-sm" method="get" action="/search/">
+        <div class="card-body row no-gutters align-items-center bg-dark">
+            <div class="col-auto">
+                <i class="fas fa-search h4 text-body"></i>
+            </div>
+            <!--end of col-->
+            <div class="col">
+                <input class="form-control form-control-lg form-control-borderless bg-light" type="search" placeholder="Enter Player Name" name="playersearch">
+            </div>
+            <!--end of col-->
+            <div class="col-auto">
+                <button class="btn btn-lg btn-primary" type="submit">Search</button>
+            </div>
+            <!--end of col-->
+        </div>
+    </form>
+<hr>
+<h4>Last 15 Battles</h4>
+    <ul class="list-unstyled list-group">
+        {% for battle in all_battles %}
+            <li class="list-group-item bg-dark"><b><a href="/battles/{{ battle.id }}/">
+                <i class="text-primary">{{ battle.datetime }}</i><br>
+                {{ battle.faction_won }} vs {{ battle.faction_lost }}<br>
+                <i class="text-warning"> {{ battle.winner }} vs {{ battle.loser }}</i><br>
+                @{{ battle.location }}</a></b></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
+
+
+

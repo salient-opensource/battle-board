@@ -1,0 +1,11 @@
+{
+  "path":"D:\\Tools\\MekWars Test\\server\\data\\django\\battles\\",
+  "path_processed":"D:\\Tools\\MekWars Test\\server\\data\\django\\processed\\",
+  "path_player":"D:\\Tools\\MekWars Test\\server\\data\\discord\\players\\",
+  "server_name":"Sal's Mostly Broken Server",
+  "path_img_mek":"https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/mechs/",
+  "path_img_vee":"https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/vehicles/",
+  "path_img_inf":"https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/Infantry/",
+  "path_img_aero":"https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/fighter/",
+  "path_img_ba":"https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/battle%20armor/Achileus.png"
+}

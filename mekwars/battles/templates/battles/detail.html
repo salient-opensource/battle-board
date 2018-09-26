@@ -1,0 +1,192 @@
+{% extends 'battles/base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block mainblock %}
+
+<!--- top div --->
+<div class="container-fluid">
+    <hr>
+    <h1>Battle occurred at <i class="text-info">{{ battle.datetime }}</i><br> on planet {{ battle.location }}<br></h1>
+    <hr>
+    <h2>{{ battle.faction_won }} vs {{ battle.faction_lost }}<br></h2>
+</div>
+<!--- main div --->
+<div class="container-fluid detailmain">
+<div class="row">
+
+<!--- winner area start --->
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 padding">
+    <h3>
+        <u class="text-success">Winner</u><br>
+        <a href="/battles/bio/{{ battle.winner }}/">{{ battle.winner }}</a><br>
+        {{ battle.faction_won }} <br>
+    </h3>
+
+    {# if player is in a subfaction show it #}
+    {% if winner_info.subFaction != "" %}
+        <h4>({{ winner_info.subFaction }})<br></h4>
+    {% endif %}
+
+    {# Get faction image and player logo #}
+    <img src="{% static "" %}battles/img/factions/{{ battle.faction_won }}.png"
+         class="player-imgs"
+         alt="{{ battle.faction_won }}">
+
+    <img src="{{ winner_info.myLogo }}"
+         class="img-thumbnail player-imgs"
+         alt="{{ battle.winner }}">
+
+    <br><br>
+
+<!--- table area (winner) --->
+ <h4>Unit Report<br></h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Mech</th>
+        <th scope="col">Chassis</th>
+        <th scope="col">Model</th>
+        <th scope="col">BV</th>
+        <th scope="col">Cost(CB)</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for unit in winner_units %}
+        {% if unit.status == "dead"  %}
+            <tr class="bg-danger">
+        {% elif unit.status == "alive" %}
+            <tr class="bg-success">
+        {% else %}
+            <tr>
+        {% endif %}
+        <th scope="row">
+            {% if unit.type == 0 or unit.type == 6 %}
+                <img src="{{ path_img_mek }}{{unit.chassis}}.png"
+                     onError="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_medium.png';" >
+            {% elif unit.type == 1 %}
+                <img src="{{ path_img_vee }}{{unit.chassis}}.png"
+                     onError="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_tracked_heavy.png';" >
+            {% elif unit.type == 2 %}
+                <img src="{{ path_img_inf }}{{unit.chassis}}.png"
+                     onError="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_infantry.png';" >
+            {% elif unit.type == 3 %}
+                <img src="https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_proto.png" >
+            {% elif unit.type == 4 %}
+                <img src="{{ path_img_ba }}{{unit.chassis}}.png"
+                     onError="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_ba.png';" >
+            {% elif unit.type == 4 %}
+                <img src="{{ path_img_aero }}{{unit.chassis}}.png"
+                     onError="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/asf.png';" >
+            {% endif %}
+        </th>
+        <td class="align-middle">
+            <b>{{ unit.chassis }}</b>
+        </td>
+        <td class="align-middle">
+            <b>{{ unit.model }}</b>
+        </td>
+        <td class="align-middle">
+            <b>{{ unit.battle_value }}</b>
+        </td>
+        <td class="align-middle">
+            <b>{{ unit.value|intword }}</b>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+<!--- total losses area (winner) --->
+<ul class="list-unstyled list-group">
+  <li class="list-group-item bg-dark">Total BV Lost: {{ winner_bvlost }}</li>
+  <li class="list-group-item bg-dark">Total CB Lost: {{ winner_losses|intword }}</li>
+</ul>
+
+</div>
+<!--- loser area start --->
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 padding">
+    <h3>
+        <u class="text-danger">Loser</u><br>
+        <a href="/battles/bio/{{ battle.loser }}/">{{ battle.loser }}</a><br>
+        {{ battle.faction_lost }} <br>
+    </h3>
+
+    {% if loser_info.subFaction != "" %}
+        <h4>({{ loser_info.subFaction }})<br></h4>
+    {% endif %}
+
+    <img src="{% static "" %}battles/img/factions/{{ battle.faction_lost }}.png"
+         class="player-imgs"
+         alt="{{ battle.faction_lost }}">
+
+    <img src="{{ loser_info.myLogo }}"
+         class="img-thumbnail player-imgs"
+         alt="{{ battle.loser }}">
+
+    <br><br>
+
+<!--- table area (loser) --->
+ <h4>Unit Report<br></h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Mech</th>
+        <th scope="col">Chassis</th>
+        <th scope="col">Model</th>
+        <th scope="col">BV</th>
+        <th scope="col">Cost(CB)</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for unit in loser_units %}
+        {% if unit.status == "dead"  %}
+            <tr class="bg-danger align-middle">
+        {% elif unit.status == "alive" %}
+            <tr class="bg-success">
+        {% else %}
+            <tr>
+        {% endif %}
+        <th scope="row">
+            {% if unit.type == 0 or unit.type == 6 %}
+                <img src="{{ path_img_mek }}{{ unit.chassis }}.png"
+                     onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_medium.png';" >
+            {% elif unit.type == 1 %}
+                <img src="{{ path_img_vee }}{{ unit.chassis }}.png"
+                     onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_tracked_heavy.png';" >
+            {% elif unit.type == 2 %}
+                <img src="{{ path_img_inf }}{{ unit.chassis }}.png"
+                     onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_infantry.png';" >
+            {% elif unit.type == 3 %}
+                <img src="https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_proto.png" >
+            {% elif unit.type == 4 %}
+                <img src="{{ path_img_ba }}{{ unit.chassis }}.png"
+                     onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/default_ba.png';" >
+            {% elif unit.type == 4 %}
+                <img src="{{ path_img_aero }}{{ unit.chassis }}.png"
+                     onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/images/units/defaults/asf.png';" >
+            {% endif %}
+        </th>
+        <td class="align-middle">
+            <b>{{ unit.chassis }}</b>
+        </td>
+        <td class="align-middle">
+            <b>{{ unit.model }}</b>
+        </td>
+        <td class="align-middle">
+            <b>{{ unit.battle_value }}</b>
+        </td>
+        <td class="align-middle">
+            <b>{{ unit.value|intword }}</b>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+<!--- total losses area (loser) --->
+<ul class="list-unstyled list-group">
+  <li class="list-group-item bg-dark">Total BV Lost: {{ loser_bvlost }}</li>
+  <li class="list-group-item bg-dark">Total CB Lost: {{ loser_losses|intword }}</li>
+</ul>
+</div>
+</div>
+</div>
+{% endblock %}
